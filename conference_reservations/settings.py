@@ -8,7 +8,8 @@ SECRET_KEY = 'django-insecure-1h(vyiy5u$kp0u+piyv+mf-l(j!xw)aedr5g9av#$f^gl!tk#0
 
 DEBUG = True  # Set to False only for production
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['cr-g6g3.onrender.com']
+
 
 # Application definition
 
@@ -19,10 +20,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'reservations',  # your app
+    'reservations',
+    'corsheaders',# your app
 ]
 
+
+
+
+
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -31,6 +39,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'conference_reservations.urls'
 
