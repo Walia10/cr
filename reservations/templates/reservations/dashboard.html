@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Admin Panel</h1>
+        <p>Manage rooms, reservations, and users</p>
+    </header>
+
+    <div class="btn-group">
+        <a class="btn btn-pink" href="{% url 'manage_rooms' %}">Manage Rooms</a>
+        <a class="btn btn-yellow" href="{% url 'admin_manage_reservations' %}">Manage Reservations</a>
+        <a class="btn btn-green" href="{% url 'manage_users' %}">Manage Users</a>
+       <a class="btn btn-pink" href="{% url 'admin_logout' %}">Logout</a>
+
+    </div>
+</body>
+</html>

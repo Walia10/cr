@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Confirm Booking</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <header>
+        <h1>Confirm Your Reservation</h1>
+        <p>You're booking: {{ room.name }}</p>
+    </header>
+
+    {% if success_message %}
+  <div style="color: green; font-weight: bold;">{{ success_message }}</div>
+{% endif %}
+{% if error_message %}
+  <div style="color: red; font-weight: bold;">{{ error_message }}</div>
+{% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Confirm Reservation</button>
+    </form>
+
+    <div style="text-align:center; margin-top: 20px;">
+        <a class="btn btn-yellow" href="{% url 'available_rooms' %}">Back to Available Rooms</a>
+    </div>
+
+</body>
+</html>
+
+

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <header>
+        <h1>Create Your Account</h1>
+        <p>Join and start booking conference rooms easily!</p>
+    </header>
+
+    {% if form.errors %}
+        <div style="color: red; text-align:center; margin-top: 10px;">
+            <p>Something went wrong. Please fix the errors below.</p>
+        </div>
+    {% endif %}
+
+    <form method="post" style="max-width: 400px; margin: auto;">
+        {% csrf_token %}
+
+        <p>
+            {{ form.username.label_tag }}<br>
+            {{ form.username }}
+        </p>
+
+        <p>
+            {{ form.password1.label_tag }}<br>
+            {{ form.password1 }}
+            <small style="color: #666;">You can use any password. No restrictions.</small>
+        </p>
+
+        <p>
+            {{ form.password2.label_tag }}<br>
+            {{ form.password2 }}
+        </p>
+
+        <button type="submit" class="btn btn-green">Register</button>
+    </form>
+
+    <div style="text-align:center; margin-top: 20px;">
+        <p>Already have an account?</p>
+        <a class="btn btn-pink" href="{% url 'login' %}">Login Here</a>
+    </div>
+
+</body>
+</html>

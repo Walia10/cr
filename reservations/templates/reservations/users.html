@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Users</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <style>
+        body {
+            background-color: #d6f5d6;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            background: linear-gradient(to right, #f8b6b6, #ffe29a);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .user-box {
+            width: 60%;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-box span {
+            font-size: 16px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .edit-btn, .delete-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            color: black;
+        }
+        .edit-btn {
+            background-color: #f2c94c;
+        }
+        .delete-btn {
+            background-color: #a3d9a5;
+        }
+        .center {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .center a {
+            background-color: #f2c94c;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Users</h1>
+
+    {% for user in users %}
+        <div class="user-box">
+            <span>{{ user.username }}{% if user.email %} - {{ user.email }}{% endif %}</span>
+            <div class="buttons">
+              <a href="{% url 'edit_user' user.id %}" class="edit-btn">Edit</a>
+                {% if user.id != request.user.id %}
+                    <a href="{% url 'delete_user' user.id %}" onclick="return confirm('Are you sure you want to delete {{ user.username }}?')" class="delete-btn">Delete</a>
+                {% else %}
+    <span>(You)</span>
+{% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="center">
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: green;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <a href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+    </div>
+
+</body>
+</html>

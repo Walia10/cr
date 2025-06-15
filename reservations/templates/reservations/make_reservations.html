@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make a Reservation</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Reserve Room: {{ room.name }}</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.date.label_tag }} {{ form.date }}
+            </div>
+            <div class="form-group">
+                {{ form.start_time.label_tag }} {{ form.start_time }}
+            </div>
+            <div class="form-group">
+                {{ form.end_time.label_tag }} {{ form.end_time }}
+            </div>
+            <button type="submit">Confirm Booking</button>
+        </form>
+    </div>
+
+    <script>
+        const dateInput = document.querySelector("input[type='date']");
+        const startTimeInput = document.querySelector("input[name='start_time']");
+        const endTimeInput = document.querySelector("input[name='end_time']");
+
+        const today = new Date().toISOString().split('T')[0];
+        if (dateInput) {
+            dateInput.setAttribute('min', today);
+        }
+
+        function validateTimes() {
+            const start = startTimeInput.value;
+            const end = endTimeInput.value;
+            if (start && end && end <= start) {
+                alert("End time must be after start time.");
+                endTimeInput.value = "";
+            }
+        }
+
+        startTimeInput?.addEventListener("change", validateTimes);
+        endTimeInput?.addEventListener("change", validateTimes);
+    </script>
+</body>
+</html>

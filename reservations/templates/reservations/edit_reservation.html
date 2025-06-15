@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Reservation</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<header>
+    <h1>Edit Reservation</h1>
+    <p>Change your booking details</p>
+</header>
+
+<div class="room-card-container" style="max-width: 420px; margin: auto;">
+    <div class="room-card">
+        <h3>{{ reservation.room.name }}</h3>
+        <p><strong>Current Date:</strong> {{ reservation.date }}</p>
+        <p><strong>Current Time:</strong> {{ reservation.start_time }} - {{ reservation.end_time }}</p>
+
+        <form method="post" style="margin-top: 20px;">
+            {% csrf_token %}
+            <label for="id_date"><strong>New Date:</strong></label>
+            {{ form.date }}
+
+            <label for="id_time" style="margin-top: 10px;"><strong>New Time:</strong></label>
+            {{ form.time }}
+
+            <div style="margin-top: 20px; text-align: center;">
+                <button type="submit" class="btn btn-green">Confirm Update</button>
+                <a href="{% url 'my_reservations' %}" class="btn btn-red">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

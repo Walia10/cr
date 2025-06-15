@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Room</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Add Room</h1>
+    </header>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn btn-pink" type="submit">Add</button>
+    </form>
+    <a class="btn btn-yellow" href="{% url 'manage_rooms' %}">Back to Rooms</a>
+</body>
+</html>

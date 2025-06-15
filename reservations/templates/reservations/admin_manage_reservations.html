@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Reservations</title>
+    <style>
+        body {
+            background-color: #d6f5d6;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            background: linear-gradient(to right, #f8b6b6, #ffe29a);
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+        .reservation-box {
+            width: 70%;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: white;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .reservation-box span {
+            font-size: 16px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .edit-btn, .delete-btn {
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+        .edit-btn {
+            background-color: #ffc107;
+        }
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+        .dashboard-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .dashboard-link a button {
+            background-color: #ffcc00;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Manage Reservations</h1>
+
+    {% for reservation in reservations %}
+        <div class="reservation-box">
+            <span>
+                Room: {{ reservation.room.name }},
+                User: {{ reservation.user.username }},
+                Date: {{ reservation.date }},
+                Time: {{ reservation.start_time|time:"P" }} - {{ reservation.end_time|time:"P" }}
+            </span>
+            <div class="buttons">
+                <form action="{% url 'edit_reservation_admin' reservation.id %}" method="get" style="margin: 0;">
+                    <button class="edit-btn" type="submit">Edit</button>
+                </form>
+                <form action="{% url 'delete_reservation_admin' reservation.id %}" method="get" style="margin: 0;">
+                    <button class="delete-btn" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+    {% empty %}
+        <p style="text-align:center;">No reservations available.</p>
+    {% endfor %}
+
+    <div class="dashboard-link">
+        <a href="{% url 'admin_dashboard' %}"><button>Back to Dashboard</button></a>
+    </div>
+</body>
+</html>

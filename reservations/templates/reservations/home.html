@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Home</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <header>
+        <h1>Conference Room Reservations Portal</h1>
+        <p>Welcome! Book your room easily.</p>
+    </header>
+
+    <div>
+        <a class="btn btn-pink" href="{% url 'login' %}">Login / Register</a>
+        <a class="btn btn-yellow" href="{% url 'my_reservations' %}">My Bookings</a>
+        <a class="btn btn-green" href="{% url 'available_rooms' %}">Start Booking</a>
+    </div>
+
+</body>
+</html>
+
+

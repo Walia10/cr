@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Reservations</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Reservations</h1>
+    </header>
+
+    <ul>
+        {% for reservation in reservations %}
+            <li>
+                Room: {{ reservation.room.name }}, User: {{ reservation.user.username }},
+                Date: {{ reservation.date }}, Time: {{ reservation.start_time }} - {{ reservation.end_time }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn-yellow" href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

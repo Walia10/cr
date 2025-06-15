@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Rooms</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Manage Rooms</h1>
+    </header>
+
+    <a class="btn btn-pink" href="{% url 'add_room' %}">Add New Room</a>
+    <ul>
+        {% for room in rooms %}
+            <li>
+                {{ room.name }} - {{ room.location }} ({{ room.capacity }})
+                <a class="btn btn-yellow" href="{% url 'edit_room' room.id %}">Edit</a>
+                <a class="btn btn-green" href="{% url 'delete_room' room.id %}">Delete</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a class="btn btn-yellow" href="{% url 'admin_dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

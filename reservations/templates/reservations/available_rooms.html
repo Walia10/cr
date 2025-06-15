@@ -1,0 +1,96 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Rooms</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <header>
+        <h1>Conference Room Reservations Portal</h1>
+        <p>Plan smart. Reserve easy.</p>
+    </header>
+
+    <div>
+        {% if not user.is_authenticated %}
+            <a class="btn btn-pink" href="{% url 'login' %}">Login / Register</a>
+        {% endif %}
+        <a class="btn btn-yellow" href="{% url 'my_reservations' %}">My Bookings</a>
+        <a class="btn btn-green" href="{% url 'available_rooms' %}">View Currently Available Rooms</a>
+
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-pink">Logout</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <h2 class="section-title">Available Rooms</h2>
+
+    <div class="room-card-container">
+        {% for room in rooms %}
+            <div class="room-card">
+                <h3>{{ room.name }}</h3>
+                <p>Capacity: {{ room.capacity }}</p>
+                {% if user.is_authenticated %}
+                    <a class="btn btn-green" href="{% url 'confirm_booking' room.id %}">Reserve</a>
+                {% else %}
+                    <a class="btn btn-green" href="{% url 'login' %}?next={% url 'confirm_booking' room.id %}">Reserve</a>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>No rooms available at the moment.</p>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
+
+
+{#{% load static %}#}
+{#<!DOCTYPE html>#}
+{#<html>#}
+{#<head>#}
+{#    <title>Available Rooms</title>#}
+{#    <link rel="stylesheet" href="{% static 'css/style.css' %}">#}
+{#</head>#}
+{#<body>#}
+{##}
+{#    <header>#}
+{#        <h1>Conference Room Reservations Portal</h1>#}
+{#        <p>Plan smart. Reserve easy.</p>#}
+{#    </header>#}
+{##}
+{#    <div>#}
+{#        {% if not user.is_authenticated %}#}
+{#            <a class="btn btn-pink" href="{% url 'login' %}">Login / Register</a>#}
+{#        {% endif %}#}
+{#        <a class="btn btn-yellow" href="{% url 'my_reservations' %}">My Bookings</a>#}
+{#        <a class="btn btn-green" href="{% url 'available_rooms' %}">View Currently Available Rooms</a>#}
+{#        {% if user.is_authenticated %}#}
+{#            <a class="btn btn-pink" href="{% url 'logout' %}">Logout</a>#}
+{#        {% endif %}#}
+{#    </div>#}
+{##}
+{#    <h2 class="section-title">Available Rooms</h2>#}
+{##}
+{#    <div class="room-card-container">#}
+{#        {% for room in rooms %}#}
+{#            <div class="room-card">#}
+{#                <h3>{{ room.name }}</h3>#}
+{#                <p>Capacity: {{ room.capacity }}</p>#}
+{#                {% if user.is_authenticated %}#}
+{#                    <a class="btn btn-green" href="{% url 'confirm_booking' room.id %}">Reserve</a>#}
+{#                {% else %}#}
+{#                    <a class="btn btn-green" href="{% url 'login' %}?next={% url 'confirm_booking' room.id %}">Reserve</a>#}
+{#                {% endif %}#}
+{#            </div>#}
+{#        {% empty %}#}
+{#            <p>No rooms available at the moment.</p>#}
+{#        {% endfor %}#}
+{#    </div>#}
+{##}
+{#</body>#}
+{#</html>#}

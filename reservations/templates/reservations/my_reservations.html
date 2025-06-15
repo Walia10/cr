@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Reservations</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <header>
+        <h1>My Reservations</h1>
+        <p>Here are your current bookings</p>
+    </header>
+
+    <div class="room-card-container">
+        {% for res in reservations %}
+
+            <div class="room-card">
+                <h3>{{ res.room.name }}</h3>
+                <p><strong>Date:</strong> {{ res.date }}</p>
+                <p><strong>Time:</strong> {{ res.start_time }} - {{ res.end_time }}</p>
+            </div>
+             <div style="margin-top: 10px;">
+                <a href="{% url 'edit_reservation' res.id %}" class="btn btn-pink">Edit</a>
+            </div>
+        {% empty %}
+            <p>You have no current reservations.</p>
+        {% endfor %}
+    </div>
+
+    <div style="text-align:center; margin-top: 20px;">
+        <a class="btn btn-green" href="{% url 'available_rooms' %}">Book a New Room</a>
+    </div>
+
+</body>
+</html>
+

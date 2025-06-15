@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Reservation</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+    <style>
+        body {
+            background-color: #d6f5d6;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        form {
+            width: 50%;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .update {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .cancel {
+            background-color: #ccc;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Reservation</h1>
+    <form method="POST">
+        {% csrf_token %}
+
+        <label for="id_user">User</label>
+        {{ form.user }}
+
+        <label for="id_room">Room</label>
+        {{ form.room }}
+
+        <label for="id_date">Date</label>
+        {{ form.date }}
+
+        <label for="id_start_time">Start Time</label>
+        {{ form.start_time }}
+
+        <label for="id_end_time">End Time</label>
+        {{ form.end_time }}
+
+        <div class="buttons">
+            <button class="update" type="submit">Update</button>
+            <a href="{% url 'admin_manage_reservations' %}"><button class="cancel" type="button">Cancel</button></a>
+        </div>
+    </form>
+</body>
+</html>

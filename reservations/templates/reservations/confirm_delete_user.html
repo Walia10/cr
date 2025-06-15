@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Delete User</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        body {
+            background-color: #d6f5d6;
+            font-family: Arial, sans-serif;
+        }
+        .box {
+            text-align: center;
+            margin: 100px auto;
+            padding: 30px;
+            max-width: 500px;
+            background: white;
+            border-radius: 10px;
+        }
+        form button {
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        .cancel {
+            background-color: #ccc;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="box">
+        <h2>Confirm Deletion</h2>
+        <h2>Are you sure you want to delete {{ user.username }}?</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Delete</button>
+    <a href="{% url 'manage_users' %}">Cancel</a>
+</form>
+    </div>
+
+</body>
+</html>
