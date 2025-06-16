@@ -7,73 +7,59 @@ function Register() {
   const [username, setUsername] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
-  const [error, setError] = useState('');
+  const [errors, setErrors] = useState('');
   const navigate = useNavigate();
 
-  const handleRegister = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (password1 !== password2) {
-      setError("Passwords do not match.");
+      setErrors("Passwords do not match.");
       return;
     }
 
     try {
-      await API.post('register/', {
-        username,
-        password1,
-        password2,
-      });
-
+      await API.post('register/', { username, password1, password2 });
       alert("Account created successfully!");
       navigate('/login');
     } catch (err) {
-      console.error("Full error:", err);
-
-      let errorMsg = "Something went wrong. Please try again.";
-
+      let message = "Something went wrong. Please fix the errors below.";
       if (err.response && err.response.data) {
         const data = err.response.data;
-
-        if (typeof data === 'object') {
-          errorMsg = Object.entries(data)
-            .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
-            .join('\n');
-        } else if (data.error) {
-          errorMsg = data.error;
-        }
+        message = Object.entries(data)
+          .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+          .join('\n');
       }
-
-      setError(errorMsg);
+      setErrors(message);
     }
   };
 
   return (
-    <>
+    <div>
       <header>
         <h1>Create Your Account</h1>
         <p>Join and start booking conference rooms easily!</p>
       </header>
 
-      {error && (
+      {errors && (
         <div style={{ color: 'red', textAlign: 'center', marginTop: '10px', whiteSpace: 'pre-line' }}>
-          <p>{error}</p>
+          <p>{errors}</p>
         </div>
       )}
 
-      <form onSubmit={handleRegister}>
-        <label>
-          <strong>Username:</strong>
+      <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: 'auto' }}>
+        <p>
+          <label><strong>Username:</strong></label><br />
           <input
             type="text"
             value={username}
             onChange={e => setUsername(e.target.value)}
             required
           />
-        </label>
+        </p>
 
-        <label>
-          <strong>Password:</strong>
+        <p>
+          <label><strong>Password:</strong></label><br />
           <input
             type="password"
             value={password1}
@@ -83,17 +69,17 @@ function Register() {
           <small style={{ color: '#666' }}>
             You can use any password. No restrictions.
           </small>
-        </label>
+        </p>
 
-        <label>
-          <strong>Confirm Password:</strong>
+        <p>
+          <label><strong>Confirm Password:</strong></label><br />
           <input
             type="password"
             value={password2}
             onChange={e => setPassword2(e.target.value)}
             required
           />
-        </label>
+        </p>
 
         <button type="submit" className="btn btn-green">Register</button>
       </form>
@@ -102,7 +88,7 @@ function Register() {
         <p>Already have an account?</p>
         <a className="btn btn-pink" href="/login">Login Here</a>
       </div>
-    </>
+    </div>
   );
 }
 

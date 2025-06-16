@@ -127,7 +127,9 @@ def edit_reservation(request, reservation_id):
         form = EditReservationForm(instance=reservation)
 
     return render(request, 'reservations/edit_reservation.html', {'form': form, 'reservation': reservation})
+
 @api_view(['POST'])
+@permission_classes([AllowAny])
 def register(request):
     username = request.data.get('username')
     password1 = request.data.get('password1')
