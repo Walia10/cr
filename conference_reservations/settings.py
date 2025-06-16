@@ -42,7 +42,11 @@ MIDDLEWARE = [
 ]
 
 
-CORS_ALLOWED_ORIGINS = ['https://cr-uto9.vercel.app']
+CORS_ALLOWED_ORIGINS = ['https://cr-u5pa.vercel.app']
+
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = ['*']
 
 ROOT_URLCONF = 'conference_reservations.urls'
 
