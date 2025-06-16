@@ -41,6 +41,7 @@ urlpatterns = [
         path('adminpanel/reservations/delete/<int:reservation_id>/', views.delete_reservation_admin,
              name='delete_reservation_admin'),
         path('admin/logout/', views.admin_logout, name='admin_logout'),
+    path('api/rooms/', views.api_room_list, name='api_room_list'),
 
 
     ]

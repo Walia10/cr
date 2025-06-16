@@ -16,6 +16,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import logout
 
+from django.http import JsonResponse
+from .models import Room
 
 @login_required
 def home_redirect_view(request):
@@ -277,3 +279,9 @@ def admin_manage_reservations(request):
     return render(request, 'reservations/admin_manage_reservations.html', {
         'reservations': reservations
     })
+
+
+
+def api_room_list(request):
+    rooms = Room.objects.all().values('id', 'name', 'capacity')
+    return JsonResponse(list(rooms), safe=False)
