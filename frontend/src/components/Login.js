@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import axios from '../api';
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import API from '../api';
 import '../Styles.css';
 
 function Login() {
@@ -9,43 +8,51 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-
-    axios.post('token-auth/', { username, password })
-      .then(res => {
-        localStorage.setItem('token', res.data.token);
-        localStorage.setItem('role', res.data.role);  // ✅ Save role too
-        toast.success("Login successful!");
-        res.data.role === 'admin' ? navigate('/admin/dashboard') : navigate('/');
-      })
-      .catch(err => {
-        toast.error("Login failed. Check credentials.");
-        console.error(err);
-      });
+    try {
+      const response = await API.post('login/', { username, password });
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('role', response.data.role);
+      navigate('/');
+    } catch (error) {
+      alert("Login failed");
+      console.error(error);
+    }
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
+    <>
+      <header>
+        <h1>Welcome Back!</h1>
+        <p>Please log in to continue</p>
+      </header>
+
       <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          placeholder="Username"
-          required
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-        />
-        <button type="submit">Login</button>
+        <label>
+          <strong>Username:</strong>
+          <input
+            type="text"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          <strong>Password:</strong>
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+        </label>
+        <button type="submit" className="btn btn-green">Log In</button>
       </form>
-    </div>
+
+      <p style={{ marginTop: '1rem' }}>Don’t have an account?</p>
+      <a href="/register" className="btn btn-pink">Register Here</a>
+    </>
   );
 }
 
