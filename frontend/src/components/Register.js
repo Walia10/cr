@@ -12,6 +12,7 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
     if (password1 !== password2) {
       setError("Passwords do not match.");
       return;
@@ -23,31 +24,28 @@ function Register() {
         password1,
         password2,
       });
+
       alert("Account created successfully!");
       navigate('/login');
+    } catch (err) {
+      console.error("Full error:", err);
+
+      let errorMsg = "Something went wrong. Please try again.";
+
+      if (err.response && err.response.data) {
+        const data = err.response.data;
+
+        if (typeof data === 'object') {
+          errorMsg = Object.entries(data)
+            .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+            .join('\n');
+        } else if (data.error) {
+          errorMsg = data.error;
+        }
+      }
+
+      setError(errorMsg);
     }
-    catch (err) {
-  console.error("Full error:", err);
-
-  let errorMsg = "Something went wrong. Please try again.";
-
-  if (err.response && err.response.data) {
-    const data = err.response.data;
-
-    // Display field errors too
-    if (typeof data === 'object') {
-      errorMsg = Object.entries(data)
-        .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
-        .join('\n');
-    } else if (data.error) {
-      errorMsg = data.error;
-    }
-  }
-
-  setError(errorMsg); // This will show the error in UI
-}
-
-
   };
 
   return (
@@ -58,7 +56,7 @@ function Register() {
       </header>
 
       {error && (
-        <div style={{ color: 'red', textAlign: 'center', marginTop: '10px' }}>
+        <div style={{ color: 'red', textAlign: 'center', marginTop: '10px', whiteSpace: 'pre-line' }}>
           <p>{error}</p>
         </div>
       )}
