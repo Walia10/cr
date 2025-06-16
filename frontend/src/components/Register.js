@@ -19,11 +19,16 @@ function Register() {
     }
 
     try {
-      await API.post('register/', {
-        username,
-        password1,
-        password2,
-      });
+     await API.post('register/', {
+  username,
+  password1,
+  password2,
+}).then(response => {
+  localStorage.setItem('token', response.data.token);
+  alert("Account created successfully!");
+  navigate('/login');
+});
+
 
       alert("Account created successfully!");
       navigate('/login');

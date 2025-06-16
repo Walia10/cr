@@ -7,6 +7,7 @@ from .forms import ReservationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token 
 from .forms import RoomForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -127,7 +128,6 @@ def edit_reservation(request, reservation_id):
         form = EditReservationForm(instance=reservation)
 
     return render(request, 'reservations/edit_reservation.html', {'form': form, 'reservation': reservation})
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -136,16 +136,21 @@ def register(request):
     password2 = request.data.get('password2')
 
     if not username or not password1 or not password2:
-        return Response({'error': 'All fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response({'error': 'All fields are required.'}, status=400)
     if password1 != password2:
-        return Response({'error': 'Passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
-
+        return Response({'error': 'Passwords do not match.'}, status=400)
     if User.objects.filter(username=username).exists():
-        return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Username already exists.'}, status=400)
 
     user = User.objects.create_user(username=username, password=password1)
-    return Response({'message': 'User created successfully.'}, status=status.HTTP_201_CREATED)
+    token, _ = Token.objects.get_or_create(user=user)  # generate auth token
+
+    return Response({
+        'message': 'User created successfully.',
+        'token': token.key,
+        'username': user.username
+    }, status=201)
+
 
 def admin_required(view_func):
     return user_passes_test(lambda u: u.is_staff and u.is_superuser)(view_func)

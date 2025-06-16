@@ -21,6 +21,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'reservations',
     'corsheaders',# your app
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 
@@ -108,3 +110,8 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@conferencebooking.com'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
