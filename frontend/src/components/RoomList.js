@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import API from '../api';
 import LogoutButton from './LogoutButton';
 
-<LogoutButton />
+// <LogoutButton />
 function RoomList() {
   const [rooms, setRooms] = useState([]);
 
@@ -22,21 +22,19 @@ function RoomList() {
   }, []);
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h2>Available Rooms</h2>
-      {rooms.length === 0 ? (
-        <p>No rooms available.</p>
-      ) : (
-        <ul>
-          {rooms.map(room => (
-            <li key={room.id}>
-              {room.name} – Capacity: {room.capacity}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
+  <div className="room-card-container">
+    {rooms.length === 0 ? (
+      <p>No rooms available.</p>
+    ) : (
+      rooms.map(room => (
+        <div className="room-card" key={room.id}>
+          <h3>{room.name}</h3>
+          <p>Capacity: {room.capacity}</p>
+        </div>
+      ))
+    )}
+  </div>
+);
+
 
 export default RoomList;
