@@ -16,6 +16,11 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import logout
 
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from .serializers import RoomSerializer  # Make sure you have this
+from .models import Room
 from django.http import JsonResponse
 from .models import Room
 
@@ -292,6 +297,10 @@ def admin_manage_reservations(request):
 
 
 
+
+@api_view(['GET'])
+@permission_classes([AllowAny])
 def api_room_list(request):
-    rooms = Room.objects.all().values('id', 'name', 'capacity', 'location', 'is_available')
-    return JsonResponse(list(rooms), safe=False)
+    rooms = Room.objects.all()
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
