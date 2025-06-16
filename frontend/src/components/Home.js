@@ -1,8 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { isLoggedIn, isAdmin } from '../utils/auth';
 import '../Styles.css';
 
 function Home() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn()) {
+      if (isAdmin()) {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/rooms');
+      }
+    }
+  }, []);
+
   return (
     <div>
       <header>
@@ -11,9 +24,9 @@ function Home() {
       </header>
 
       <div>
-        <Link className="btn btn-pink" to="/login">Login / Register</Link>
-        <Link className="btn btn-yellow" to="/mybookings">My Bookings</Link>
-        <Link className="btn btn-green" to="/">Start Booking</Link>
+        <button className="btn btn-pink" onClick={() => navigate('/login')}>Login / Register</button>
+        <button className="btn btn-yellow" onClick={() => navigate('/mybookings')}>My Bookings</button>
+        <button className="btn btn-green" onClick={() => navigate('/rooms')}>Start Booking</button>
       </div>
     </div>
   );

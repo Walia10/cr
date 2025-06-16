@@ -1,7 +1,7 @@
 export const isLoggedIn = () => {
-  return !!localStorage.getItem("token");
+  return localStorage.getItem('token') !== null;
 };
 
 export const isAdmin = () => {
-  return localStorage.getItem("role") === "admin";
+  return localStorage.getItem('role') === 'admin';
 };
