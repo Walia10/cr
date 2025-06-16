@@ -27,23 +27,24 @@ function Register() {
       navigate('/login');
     }
     catch (err) {
+  console.error("Full error:", err);
+
   let errorMsg = "Something went wrong. Please try again.";
 
   if (err.response && err.response.data) {
     const data = err.response.data;
 
-    // Try extracting all error messages
+    // Display field errors too
     if (typeof data === 'object') {
       errorMsg = Object.entries(data)
-        .map(([key, val]) => `${key}: ${Array.isArray(val) ? val.join(', ') : val}`)
+        .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
         .join('\n');
     } else if (data.error) {
       errorMsg = data.error;
     }
   }
 
-  setError(errorMsg);
-  console.error("Register error:", err.response ? err.response.data : err);
+  setError(errorMsg); // This will show the error in UI
 }
 
 
