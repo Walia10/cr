@@ -14,7 +14,7 @@ import MyBookings from './components/MyBookings';
 import EditRoom from './components/EditRoom';
 import EditUser from './components/EditUser';
 import DeleteUser from './components/DeleteUser';
-import ManageRooms from './components/ManageRooms';
+import ManageRooms from './components/ManageRoom';
 import ManageUsers from './components/ManageUsers';
 import AdminRoomForm from './components/AdminRoomForm';
 import AdminAllReservations from './components/AdminAllReservations';
