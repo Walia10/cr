@@ -1,8 +1,9 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'https://cr-g6g3.onrender.com/api/', // notice the trailing /api/
+  baseURL: 'https://cr-g6g3.onrender.com/api/',
 });
+
 
 
 API.interceptors.request.use(config => {

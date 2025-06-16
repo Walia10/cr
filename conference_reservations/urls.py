@@ -29,6 +29,6 @@ urlpatterns = [
     path('api/rooms/', views.api_room_list, name='api_room_list'),  #
     path('', include('reservations.urls')),
     path('api/', include('reservations.urls')),
-path('api/', include('reservations.api_urls'))
+    path('api/', include('reservations.api_urls')),
 ]
 
