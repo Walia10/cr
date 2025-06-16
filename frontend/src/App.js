@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import { isLoggedIn, isAdmin } from './utils/auth';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './style.css'
 
 function ProtectedRoute({ children }) {
   return isLoggedIn() ? children : <Navigate to="/login" />;
