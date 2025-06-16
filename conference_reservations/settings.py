@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-1h(vyiy5u$kp0u+piyv+mf-l(j!xw)aedr5g9av#$f^gl!tk#0'
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['cr-g6g3.onrender.com', 'localhost', '127.0.0.1']
 
 
@@ -106,3 +106,4 @@ LOGIN_REDIRECT_URL = '/dashboard/'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 DEFAULT_FROM_EMAIL = 'noreply@conferencebooking.com'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
