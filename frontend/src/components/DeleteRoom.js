@@ -1,27 +1,38 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api';
-import LogoutButton from './LogoutButton';
 import '../Styles.css';
-<LogoutButton />
 
 function DeleteRoom() {
-  const { id } = useParams();
+  const { roomId } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (window.confirm("Are you sure you want to delete this room?")) {
-      API.delete(`rooms/${id}/`)
-        .then(() => {
-          alert("Room deleted");
-          navigate('/admin');
-        });
-    } else {
-      navigate('/admin');
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    try {
+      await API.delete(`rooms/${roomId}/`);
+      alert("Room deleted successfully.");
+      navigate('/admin/rooms');
+    } catch (err) {
+      alert("Failed to delete room.");
+      console.error(err);
     }
-  }, [id, navigate]);
+  };
 
-  return <p>Processing...</p>;
+  return (
+    <div className="room-card" style={{ maxWidth: '500px', margin: '100px auto', padding: '30px' }}>
+      <h2>Confirm Room Deletion</h2>
+      <p>Are you sure you want to delete this room?</p>
+      <form onSubmit={handleDelete}>
+        <button type="submit" style={{ backgroundColor: 'red', color: 'white', padding: '10px 20px' }}>
+          Delete Room
+        </button>
+        <a href="/admin/rooms" className="btn" style={{ backgroundColor: '#ccc', marginLeft: '10px' }}>
+          Cancel
+        </a>
+      </form>
+    </div>
+  );
 }
 
 export default DeleteRoom;

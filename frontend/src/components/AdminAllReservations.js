@@ -1,34 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import API from '../api';
-import LogoutButton from './LogoutButton';
 import '../Styles.css';
-<LogoutButton />
 
 function AdminAllReservations() {
   const [reservations, setReservations] = useState([]);
 
   useEffect(() => {
-    API.get('reservations/')
+    API.get('admin/reservations/')
       .then(res => setReservations(res.data))
-      .catch(err => console.error(err));
+      .catch(err => console.error("Failed to fetch reservations", err));
   }, []);
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h2>All Reservations</h2>
-      {reservations.length === 0 ? (
-        <p>No reservations found.</p>
-      ) : (
-        <ul>
-          {reservations.map(r => (
-            <li key={r.id}>
-              User ID: {r.user} | Room: {r.room} | Date: {r.date} | {r.start_time} - {r.end_time}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      <header>
+        <h1>Manage Reservations</h1>
+        <p>All user bookings are listed below.</p>
+      </header>
+
+      {reservations.map(res => (
+        <div key={res.id} className="room-card" style={{ width: '70%', margin: '10px auto' }}>
+          <span>
+            <strong>Room:</strong> {res.room.name},&nbsp;
+            <strong>User:</strong> {res.user.username},&nbsp;
+            <strong>Date:</strong> {res.date},&nbsp;
+            <strong>Time:</strong> {res.start_time} - {res.end_time}
+          </span>
+          <div className="buttons" style={{ marginTop: '10px' }}>
+            <a href={`/admin/edit-reservation/${res.id}`} className="btn btn-yellow">Edit</a>
+            <a href={`/admin/delete-reservation/${res.id}`} className="btn btn-green" style={{ marginLeft: '10px' }}>Delete</a>
+          </div>
+        </div>
+      ))}
+
+      <div style={{ textAlign: 'center', marginTop: '30px' }}>
+        <a href="/admin/dashboard" className="btn btn-yellow">Back to Dashboard</a>
+      </div>
+    </>
   );
 }
 
 export default AdminAllReservations;
+  

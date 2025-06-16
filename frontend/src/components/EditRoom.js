@@ -1,33 +1,88 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api';
-import LogoutButton from './LogoutButton';
 import '../Styles.css';
-<LogoutButton />
-import { useParams } from 'react-router-dom';
 
 function EditRoom() {
-  const { id } = useParams();
-  const [room, setRoom] = useState({ name: '', location: '', capacity: '' });
+  const { roomId } = useParams();  // expects /admin/edit-room/:roomId
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    location: '',
+    capacity: ''
+  });
 
   useEffect(() => {
-    API.get(`rooms/${id}/`).then(res => setRoom(res.data));
-  }, [id]);
+    API.get(`rooms/${roomId}/`)
+      .then(res => setFormData(res.data))
+      .catch(err => console.error("Failed to fetch room data", err));
+  }, [roomId]);
+
+  const handleChange = (e) => {
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    API.put(`rooms/${id}/`, room)
-      .then(() => alert('Room updated!'))
-      .catch(() => alert('Update failed'));
+    API.put(`rooms/${roomId}/`, formData)
+      .then(() => {
+        alert("Room updated successfully!");
+        navigate('/admin/rooms');
+      })
+      .catch(err => {
+        alert("Update failed");
+        console.error(err);
+      });
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
-      <h2>Edit Room</h2>
-      <input value={room.name} onChange={e => setRoom({ ...room, name: e.target.value })} /><br />
-      <input value={room.location} onChange={e => setRoom({ ...room, location: e.target.value })} /><br />
-      <input type="number" value={room.capacity} onChange={e => setRoom({ ...room, capacity: e.target.value })} /><br />
-      <button type="submit">Save</button>
-    </form>
+    <>
+      <header>
+        <h1>Edit Room</h1>
+      </header>
+
+      <form onSubmit={handleSubmit}>
+        <label>
+          <strong>Room Name:</strong>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label>
+          <strong>Location:</strong>
+          <input
+            type="text"
+            name="location"
+            value={formData.location}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <label>
+          <strong>Capacity:</strong>
+          <input
+            type="number"
+            name="capacity"
+            value={formData.capacity}
+            onChange={handleChange}
+            required
+          />
+        </label>
+
+        <button className="btn btn-pink" type="submit">Update</button>
+      </form>
+
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <a className="btn btn-yellow" href="/admin/rooms">Back to Rooms</a>
+      </div>
+    </>
   );
 }
 

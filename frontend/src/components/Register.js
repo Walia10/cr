@@ -1,31 +1,91 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import API from '../api';
 import { useNavigate } from 'react-router-dom';
-import LogoutButton from './LogoutButton';
 import '../Styles.css';
 
-<LogoutButton />
 function Register() {
-  const [data, setData] = useState({ username: '', password: '' });
+  const [username, setUsername] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    axios.post('http://127.0.0.1:8000/api/register/', data)
-      .then(() => {
-        alert('Registration successful!');
-        navigate('/login');
-      })
-      .catch(err => alert('Registration failed'));
+    if (password1 !== password2) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await API.post('register/', {
+        username,
+        password1,
+        password2,
+      });
+      alert("Account created successfully!");
+      navigate('/login');
+    } catch (err) {
+      setError("Something went wrong. Please fix the errors.");
+      console.error(err);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
-      <h2>Register</h2>
-      <input placeholder="Username" onChange={e => setData({ ...data, username: e.target.value })} /><br />
-      <input placeholder="Password" type="password" onChange={e => setData({ ...data, password: e.target.value })} /><br />
-      <button type="submit">Register</button>
-    </form>
+    <>
+      <header>
+        <h1>Create Your Account</h1>
+        <p>Join and start booking conference rooms easily!</p>
+      </header>
+
+      {error && (
+        <div style={{ color: 'red', textAlign: 'center', marginTop: '10px' }}>
+          <p>{error}</p>
+        </div>
+      )}
+
+      <form onSubmit={handleRegister}>
+        <label>
+          <strong>Username:</strong>
+          <input
+            type="text"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            required
+          />
+        </label>
+
+        <label>
+          <strong>Password:</strong>
+          <input
+            type="password"
+            value={password1}
+            onChange={e => setPassword1(e.target.value)}
+            required
+          />
+          <small style={{ color: '#666' }}>
+            You can use any password. No restrictions.
+          </small>
+        </label>
+
+        <label>
+          <strong>Confirm Password:</strong>
+          <input
+            type="password"
+            value={password2}
+            onChange={e => setPassword2(e.target.value)}
+            required
+          />
+        </label>
+
+        <button type="submit" className="btn btn-green">Register</button>
+      </form>
+
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
+        <p>Already have an account?</p>
+        <a className="btn btn-pink" href="/login">Login Here</a>
+      </div>
+    </>
   );
 }
 

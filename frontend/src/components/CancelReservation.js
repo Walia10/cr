@@ -1,27 +1,29 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api';
-import LogoutButton from './LogoutButton';
 import '../Styles.css';
-<LogoutButton />
 
 function CancelReservation() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (window.confirm("Cancel this reservation?")) {
-      API.delete(`reservations/${id}/`)
-        .then(() => {
+    const confirmAndCancel = async () => {
+      if (window.confirm("Are you sure you want to cancel this reservation?")) {
+        try {
+          await API.delete(`reservations/${id}/`);
           alert("Reservation cancelled");
-          navigate('/mybookings');
-        });
-    } else {
+        } catch (error) {
+          alert("Failed to cancel reservation");
+        }
+      }
       navigate('/mybookings');
-    }
+    };
+
+    confirmAndCancel();
   }, [id, navigate]);
 
-  return <p>Processing...</p>;
+  return <p style={{ textAlign: 'center', marginTop: '50px' }}>Processing cancellation...</p>;
 }
 
 export default CancelReservation;

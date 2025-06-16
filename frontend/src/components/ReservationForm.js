@@ -1,71 +1,80 @@
 import React, { useState } from 'react';
-import axios from '../api';
-import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import LogoutButton from './LogoutButton';
+import API from '../api';
 import '../Styles.css';
 
-<LogoutButton />
-function ReservationForm() {
-  const [room, setRoom] = useState('');
+function ReservationForm({ roomId }) {
   const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
-  const navigate = useNavigate();
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
 
-  const handleSubmit = (e) => {
+  const today = new Date().toISOString().split('T')[0];
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios.post('reservations/', {
-      room: room,
-      date: date,
-      time: time
-    })
-    .then(response => {
-      toast.success("✅ Reservation confirmed! Email sent.");
-      setTimeout(() => navigate('/'), 2500);
-    })
-    .catch(error => {
+    if (endTime <= startTime) {
+      alert("End time must be after start time.");
+      return;
+    }
+
+    try {
+      await API.post(`reservations/`, {
+        room: roomId,
+        date,
+        start_time: startTime,
+        end_time: endTime,
+      });
+      alert("Reservation confirmed!");
+    } catch (error) {
+      alert("Error submitting reservation.");
       console.error(error);
-      toast.error("❌ Failed to book. Try again.");
-    });
+    }
   };
 
   return (
-    <div className="container">
-      <h2>Book a Room</h2>
+    <>
+      <header>
+        <h1>Reserve a Room</h1>
+        <p>Please select a date and time to book your room.</p>
+      </header>
+
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>Room ID:</label>
-          <input
-            type="text"
-            value={room}
-            onChange={(e) => setRoom(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Date:</label>
+        <label>
+          <strong>Date:</strong>
           <input
             type="date"
+            min={today}
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
           />
-        </div>
-        <div>
-          <label>Time:</label>
+        </label>
+
+        <label>
+          <strong>Start Time:</strong>
           <input
             type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
+            name="start_time"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
             required
           />
-        </div>
-        <button type="submit">Reserve</button>
+        </label>
+
+        <label>
+          <strong>End Time:</strong>
+          <input
+            type="time"
+            name="end_time"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            required
+          />
+        </label>
+
+        <button type="submit" className="btn btn-green">Confirm Booking</button>
       </form>
-      <ToastContainer />
-    </div>
+    </>
   );
 }
 

@@ -1,19 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import LogoutButton from './LogoutButton';
 import '../Styles.css';
-<LogoutButton />
 
 function AdminDashboard() {
   return (
-    <div className="container mt-4">
-      <h2>Admin Dashboard</h2>
-      <ul className="list-group">
-        <li className="list-group-item"><Link to="/admin/add-room">Add Room</Link></li>
-        <li className="list-group-item"><Link to="/admin/all-reservations">View All Reservations</Link></li>
-        <li className="list-group-item"><Link to="/admin/users">Manage Users</Link></li>
-      </ul>
-    </div>
+    <>
+      <header>
+        <h1>Welcome, Admin</h1>
+        <p>Use the options below to manage the system.</p>
+      </header>
+
+      <div style={{ textAlign: 'center', marginTop: '30px' }}>
+        <a className="btn btn-yellow" href="/admin/rooms">Manage Rooms</a>
+        <br />
+        <a className="btn btn-green" href="/admin/reservations">View All Reservations</a>
+        <br />
+        <a className="btn btn-pink" href="/admin/users">Manage Users</a>
+        <br />
+        <a className="btn" style={{ backgroundColor: '#ccc' }} href="/logout">Logout</a>
+      </div>
+    </>
   );
 }
 
