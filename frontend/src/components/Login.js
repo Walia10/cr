@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from '../api';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import '../Styles.css';
 
 function Login() {
   const [username, setUsername] = useState('');

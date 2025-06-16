@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { isLoggedIn, isAdmin } from '../utils/auth';
+import '../Styles.css';
 
 function Navbar() {
   const navigate = useNavigate();

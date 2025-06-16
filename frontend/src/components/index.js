@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import API from '../api';
 import LogoutButton from './LogoutButton';
+import '../Styles.css';
 
 <LogoutButton />
 import 'bootstrap/dist/css/bootstrap.min.css';

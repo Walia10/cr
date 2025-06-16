@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import API from '../api';
 import LogoutButton from './LogoutButton';
-
+import '../Styles.css';
 <LogoutButton />
 import { useParams } from 'react-router-dom';
 

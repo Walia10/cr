@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import API from '../api';
 import LogoutButton from './LogoutButton';
-
+import '../Styles.css';
 <LogoutButton />
 
 function MyBookings() {

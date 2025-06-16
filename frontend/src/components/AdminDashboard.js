@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LogoutButton from './LogoutButton';
-
+import '../Styles.css';
 <LogoutButton />
 
 function AdminDashboard() {

@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LogoutButton from './LogoutButton';
+import '../Styles.css';
 
 <LogoutButton />
 function ReservationForm() {

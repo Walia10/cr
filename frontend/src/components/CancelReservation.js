@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import API from '../api';
 import LogoutButton from './LogoutButton';
-
+import '../Styles.css';
 <LogoutButton />
 
 function CancelReservation() {
