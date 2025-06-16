@@ -7,7 +7,7 @@ from .forms import ReservationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token 
+from rest_framework.authtoken.models import Token
 from .forms import RoomForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
@@ -24,7 +24,8 @@ from .serializers import RoomSerializer  # Make sure you have this
 from .models import Room
 from django.http import JsonResponse
 from .models import Room
-
+from django.contrib.auth import authenticate
+from rest_framework.authtoken.models import Token
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -150,6 +151,32 @@ def register(request):
         'token': token.key,
         'username': user.username
     }, status=201)
+
+
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def login_view(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    if not username or not password:
+        return Response({'error': 'Username and password required.'}, status=400)
+
+    user = authenticate(username=username, password=password)
+
+    if not user:
+        return Response({'error': 'Invalid credentials.'}, status=401)
+
+    token, _ = Token.objects.get_or_create(user=user)
+
+    return Response({
+        'token': token.key,
+        'username': user.username,
+        'role': 'admin' if user.is_superuser else 'user'
+    }, status=200)
+
 
 
 def admin_required(view_func):
