@@ -10,16 +10,17 @@ function RoomList() {
 
   console.log("RoomList component is rendering.");
 
-  useEffect(() => {
-    API.get('rooms/')
-      .then(res => {
-        console.log('ROOMS:', res.data);
-        setRooms(res.data);
-      })
-      .catch(err => {
-        console.error('ROOM FETCH ERROR:', err);
-      });
-  }, []);
+useEffect(() => {
+  API.get('rooms/')
+    .then(res => {
+      console.log('ROOMS:', res.data);  // ← check this
+      setRooms(res.data);
+    })
+    .catch(err => {
+      console.error('ROOM FETCH ERROR:', err);  // ← check this
+    });
+}, []);
+
 
   return (
     <div className="room-card-container">
