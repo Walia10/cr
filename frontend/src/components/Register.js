@@ -7,30 +7,39 @@ function Register() {
   const [username, setUsername] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
-  const [errors, setErrors] = useState('');
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
     if (password1 !== password2) {
-      setErrors("Passwords do not match.");
+      setError("Passwords do not match.");
       return;
     }
 
     try {
-      await API.post('register/', { username, password1, password2 });
+      await API.post('register/', {
+        username,
+        password1,
+        password2,
+      });
+
       alert("Account created successfully!");
       navigate('/login');
     } catch (err) {
       let message = "Something went wrong. Please fix the errors below.";
+
       if (err.response && err.response.data) {
         const data = err.response.data;
+
         message = Object.entries(data)
-          .map(([field, msgs]) => `${field}: ${Array.isArray(msgs) ? msgs.join(', ') : msgs}`)
+          .map(([key, value]) => `${key}: ${Array.isArray(value) ? value.join(', ') : value}`)
           .join('\n');
       }
-      setErrors(message);
+
+      console.error("Register error:", message);
+      setError(message);
     }
   };
 
@@ -41,13 +50,13 @@ function Register() {
         <p>Join and start booking conference rooms easily!</p>
       </header>
 
-      {errors && (
+      {error && (
         <div style={{ color: 'red', textAlign: 'center', marginTop: '10px', whiteSpace: 'pre-line' }}>
-          <p>{errors}</p>
+          {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} style={{ maxWidth: '400px', margin: 'auto' }}>
+      <form onSubmit={handleRegister} style={{ maxWidth: '400px', margin: 'auto' }}>
         <p>
           <label><strong>Username:</strong></label><br />
           <input
