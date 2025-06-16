@@ -283,5 +283,5 @@ def admin_manage_reservations(request):
 
 
 def api_room_list(request):
-    rooms = Room.objects.all().values('id', 'name', 'capacity')
+    rooms = Room.objects.all().values('id', 'name', 'capacity', 'location', 'is_available')
     return JsonResponse(list(rooms), safe=False)
