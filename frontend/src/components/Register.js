@@ -26,18 +26,26 @@ function Register() {
       alert("Account created successfully!");
       navigate('/login');
     }
-    catch (err)
-    {
-      if (err.response && err.response.data)
-      {
-        const errorMsg = err.response.data.error || JSON.stringify(err.response.data);
-        setError(errorMsg);
-      } else
-      {
-        setError("Something went wrong. Please try again.");
-      }
-      console.error("Register error:", err.response ? err.response.data : err);
+    catch (err) {
+  let errorMsg = "Something went wrong. Please try again.";
+
+  if (err.response && err.response.data) {
+    const data = err.response.data;
+
+    // Try extracting all error messages
+    if (typeof data === 'object') {
+      errorMsg = Object.entries(data)
+        .map(([key, val]) => `${key}: ${Array.isArray(val) ? val.join(', ') : val}`)
+        .join('\n');
+    } else if (data.error) {
+      errorMsg = data.error;
+    }
+  }
+
+  setError(errorMsg);
+  console.error("Register error:", err.response ? err.response.data : err);
 }
+
 
   };
 
