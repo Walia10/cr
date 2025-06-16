@@ -19,6 +19,12 @@ from django.contrib.auth import logout
 from django.http import JsonResponse
 from .models import Room
 
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from django.contrib.auth.models import User
+
 @login_required
 def home_redirect_view(request):
     if request.user.is_authenticated:
@@ -116,19 +122,23 @@ def edit_reservation(request, reservation_id):
         form = EditReservationForm(instance=reservation)
 
     return render(request, 'reservations/edit_reservation.html', {'form': form, 'reservation': reservation})
-
+@api_view(['POST'])
 def register(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')
-    else:
-        form = UserCreationForm()
-    return render(request, 'reservations/register.html', {'form': form})
+    username = request.data.get('username')
+    password1 = request.data.get('password1')
+    password2 = request.data.get('password2')
 
+    if not username or not password1 or not password2:
+        return Response({'error': 'All fields are required.'}, status=status.HTTP_400_BAD_REQUEST)
 
+    if password1 != password2:
+        return Response({'error': 'Passwords do not match.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.objects.create_user(username=username, password=password1)
+    return Response({'message': 'User created successfully.'}, status=status.HTTP_201_CREATED)
 
 def admin_required(view_func):
     return user_passes_test(lambda u: u.is_staff and u.is_superuser)(view_func)

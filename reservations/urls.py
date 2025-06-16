@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
-from .views import home_redirect_view
+from .views import home_redirect_view, register
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 
@@ -42,6 +42,7 @@ urlpatterns = [
              name='delete_reservation_admin'),
         path('admin/logout/', views.admin_logout, name='admin_logout'),
     path('api/rooms/', views.api_room_list, name='api_room_list'),
+    path('register/', register, name='register'),
 
 
     ]

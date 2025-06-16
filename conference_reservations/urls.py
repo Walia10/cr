@@ -28,5 +28,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/rooms/', views.api_room_list, name='api_room_list'),  #
     path('', include('reservations.urls')),
+    path('api/', include('reservations.urls')),
 ]
 

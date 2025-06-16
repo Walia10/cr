@@ -25,10 +25,20 @@ function Register() {
       });
       alert("Account created successfully!");
       navigate('/login');
-    } catch (err) {
-      setError("Something went wrong. Please fix the errors.");
-      console.error(err);
     }
+    catch (err)
+    {
+      if (err.response && err.response.data)
+      {
+        const errorMsg = err.response.data.error || JSON.stringify(err.response.data);
+        setError(errorMsg);
+      } else
+      {
+        setError("Something went wrong. Please try again.");
+      }
+      console.error("Register error:", err.response ? err.response.data : err);
+}
+
   };
 
   return (
