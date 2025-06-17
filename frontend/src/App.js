@@ -1,5 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Styles.css';
@@ -22,7 +28,7 @@ import AdminAllReservations from './components/AdminAllReservations';
 import ConfirmBooking from './components/ConfirmBooking';
 import CancelReservation from './components/CancelReservation';
 import DeleteRoom from './components/DeleteRoom';
-import AdminUserList from './components/AdminUserList'; // ✅ fixed this line
+import AdminUserList from './components/AdminUserList';
 
 function ProtectedRoute({ children }) {
   const isLoggedIn = localStorage.getItem('token') !== null;
@@ -34,99 +40,159 @@ function AdminRoute({ children }) {
   return isAdmin ? children : <Navigate to="/" />;
 }
 
-function App() {
+// Main wrapper that provides Router context
+function AppWrapper() {
   return (
     <Router>
+      <App />
+    </Router>
+  );
+}
+
+function App() {
+  const location = useLocation();
+
+  // List of paths where Navbar should be hidden
+  const hideNavbarOn = ['/login', '/register'];
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
+  return (
+    <>
       <ToastContainer />
-      <Navbar />
+      {!hideNavbarOn.includes(location.pathname) && !isAdminRoute && <Navbar />}
+
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/rooms" element={
-          <ProtectedRoute>
-            <RoomList />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/rooms"
+          element={
+            <ProtectedRoute>
+              <RoomList />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Protected Routes */}
-        <Route path="/reserve" element={
-          <ProtectedRoute>
-            <ReservationForm />
-          </ProtectedRoute>
-        } />
-        <Route path="/confirm/:roomId" element={
-          <ProtectedRoute>
-            <ConfirmBooking />
-          </ProtectedRoute>
-        } />
-        <Route path="/mybookings" element={
-          <ProtectedRoute>
-            <MyBookings />
-          </ProtectedRoute>
-        }/>
-
-        <Route path="/cancel-reservation/:id" element={
-          <ProtectedRoute>
-            <CancelReservation />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/reserve"
+          element={
+            <ProtectedRoute>
+              <ReservationForm />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/confirm/:roomId"
+          element={
+            <ProtectedRoute>
+              <ConfirmBooking />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/mybookings"
+          element={
+            <ProtectedRoute>
+              <MyBookings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/cancel-reservation/:id"
+          element={
+            <ProtectedRoute>
+              <CancelReservation />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Admin Routes */}
-        <Route path="/admin/dashboard" element={
-          <AdminRoute>
-            <AdminDashboard />
-          </AdminRoute>
-        } />
-        <Route path="/admin/rooms" element={
-          <AdminRoute>
-            <ManageRooms />
-          </AdminRoute>
-        } />
-        <Route path="/admin/users" element={
-          <AdminRoute>
-            <ManageUsers />
-          </AdminRoute>
-        } />
-        <Route path="/admin/user-list" element={
-          <AdminRoute>
-            <AdminUserList />
-          </AdminRoute>
-        } />
-        <Route path="/admin/add-room" element={
-          <AdminRoute>
-            <AdminRoomForm />
-          </AdminRoute>
-        } />
-        <Route path="/admin/edit-room/:roomId" element={
-          <AdminRoute>
-            <EditRoom />
-          </AdminRoute>
-        } />
-        <Route path="/admin/delete-room/:roomId" element={
-          <AdminRoute>
-            <DeleteRoom />
-          </AdminRoute>
-        } />
-        <Route path="/admin/edit-user/:userId" element={
-          <AdminRoute>
-            <EditUser />
-          </AdminRoute>
-        } />
-        <Route path="/admin/delete-user/:userId" element={
-          <AdminRoute>
-            <DeleteUser />
-          </AdminRoute>
-        } />
-        <Route path="/admin/reservations" element={
-          <AdminRoute>
-            <AdminAllReservations />
-          </AdminRoute>
-        } />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/rooms"
+          element={
+            <AdminRoute>
+              <ManageRooms />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <ManageUsers />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/user-list"
+          element={
+            <AdminRoute>
+              <AdminUserList />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/add-room"
+          element={
+            <AdminRoute>
+              <AdminRoomForm />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/edit-room/:roomId"
+          element={
+            <AdminRoute>
+              <EditRoom />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/delete-room/:roomId"
+          element={
+            <AdminRoute>
+              <DeleteRoom />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/edit-user/:userId"
+          element={
+            <AdminRoute>
+              <EditUser />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/delete-user/:userId"
+          element={
+            <AdminRoute>
+              <DeleteUser />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/reservations"
+          element={
+            <AdminRoute>
+              <AdminAllReservations />
+            </AdminRoute>
+          }
+        />
       </Routes>
-    </Router>
+    </>
   );
 }
 
-export default App;
+export default AppWrapper;
