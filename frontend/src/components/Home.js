@@ -1,33 +1,17 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isLoggedIn, isAdmin } from '../utils/auth';
 import '../Styles.css';
-import '../Navbar.css';
 
 function Home() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isLoggedIn()) {
-      if (isAdmin()) {
-        navigate('/admin/dashboard');
-      } else {
-        navigate('/rooms');
-      }
-    }
-  }, []);
-
   return (
-    <div>
-      <header>
-        <h1>Conference Room Reservations Portal</h1>
-        <p>Welcome! Book your room easily.</p>
-      </header>
-
-      <div>
-        <button className="btn btn-pink" onClick={() => navigate('/login')}>Login / Register</button>
-        <button className="btn btn-yellow" onClick={() => navigate('/mybookings')}>My Bookings</button>
-        <button className="btn btn-green" onClick={() => navigate('/rooms')}>Start Booking</button>
+    <div className="home-container" style={{ textAlign: 'center' }}>
+      <h2 style={{ marginTop: '60px' }}>Welcome! Book your room easily.</h2>
+      <div style={{ marginTop: '30px' }}>
+        <button onClick={() => navigate('/login')} className="btn-pink">Login / Register</button>
+        <button onClick={() => navigate('/mybookings')} className="btn-yellow">My Bookings</button>
+        <button onClick={() => navigate('/rooms')} className="btn-green">Start Booking</button>
       </div>
     </div>
   );
