@@ -5,7 +5,7 @@ from django.contrib import admin
 from .views import home_redirect_view, register
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
-
+from .views import home_redirect_view, register, login_view
 
 
 
@@ -29,21 +29,21 @@ urlpatterns = [
     path('user-dashboard/', login_required(TemplateView.as_view(template_name="reservations/user_dashboard.html")),
          name='user-dashboard'),
     path('edit/<int:reservation_id>/', views.edit_reservation, name='edit_reservation'),
-        path('adminpanel/reservations/edit/<int:reservation_id>/', views.edit_reservation_admin,
+    path('adminpanel/reservations/edit/<int:reservation_id>/', views.edit_reservation_admin,
              name='edit_reservation_admin'),
-        path('adminpanel/reservations/delete/<int:reservation_id>/', views.delete_reservation_admin,
+    path('adminpanel/reservations/delete/<int:reservation_id>/', views.delete_reservation_admin,
              name='delete_reservation_admin'),
-        path('adminpanel/users/edit/<int:user_id>/', views.edit_user, name='edit_user'),
-        path('adminpanel/users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
-        path('adminpanel/reservations/', views.admin_manage_reservations, name='admin_manage_reservations'),
-        path('adminpanel/reservations/edit/<int:reservation_id>/', views.edit_reservation_admin,
+    path('adminpanel/users/edit/<int:user_id>/', views.edit_user, name='edit_user'),
+    path('adminpanel/users/delete/<int:user_id>/', views.delete_user, name='delete_user'),
+    path('adminpanel/reservations/', views.admin_manage_reservations, name='admin_manage_reservations'),
+    path('adminpanel/reservations/edit/<int:reservation_id>/', views.edit_reservation_admin,
              name='edit_reservation_admin'),
-        path('adminpanel/reservations/delete/<int:reservation_id>/', views.delete_reservation_admin,
+    path('adminpanel/reservations/delete/<int:reservation_id>/', views.delete_reservation_admin,
              name='delete_reservation_admin'),
-        path('admin/logout/', views.admin_logout, name='admin_logout'),
+    path('admin/logout/', views.admin_logout, name='admin_logout'),
     path('api/rooms/', views.api_room_list, name='api_room_list'),
     path('register/', register, name='register'),
-path('api/login/', views.login_view, name='api_login'),
+    path('api/login/', views.login_view, name='api_login'),
 
 
 
