@@ -30,5 +30,6 @@ urlpatterns = [
     path('', include('reservations.urls')),
     path('api/', include('reservations.urls')),
     path('api/', include('reservations.api_urls')),
+
 ]
 

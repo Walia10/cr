@@ -6,7 +6,7 @@ from .views import home_redirect_view, register
 from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from .views import home_redirect_view, register, login_view
-
+from .views import api_room_list
 
 
 urlpatterns = [
@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/rooms/', views.api_room_list, name='api_room_list'),
     path('register/', register, name='register'),
     path('api/login/', views.login_view, name='api_login'),
+    path('api/rooms/', api_room_list, name='api_room_list')
 
 
 
