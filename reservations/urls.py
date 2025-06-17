@@ -43,6 +43,8 @@ urlpatterns = [
         path('admin/logout/', views.admin_logout, name='admin_logout'),
     path('api/rooms/', views.api_room_list, name='api_room_list'),
     path('register/', register, name='register'),
+path('api/login/', views.login_view, name='api_login'),
+
 
 
     ]

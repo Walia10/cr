@@ -1,6 +1,6 @@
 from pathlib import Path
 import os
-
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -46,7 +46,11 @@ CORS_ALLOWED_ORIGINS = ['https://cr-u5pa.vercel.app']
 
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_HEADERS = ['*']
+
+
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Authorization',
+]
 
 ROOT_URLCONF = 'conference_reservations.urls'
 
