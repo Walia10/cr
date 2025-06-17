@@ -1,7 +1,6 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { isLoggedIn, isAdmin } from '../utils/auth';
-import '../Styles.css';
+import { useNavigate } from 'react-router-dom';
+import './Navbar.css'; // Optional
 
 function Navbar() {
   const navigate = useNavigate();
@@ -13,21 +12,15 @@ function Navbar() {
   };
 
   return (
-    <nav style={{ padding: '1rem', background: '#303f9f', color: 'white' }}>
-      <Link to="/" style={{ color: 'white', marginRight: '1rem' }}>Home</Link>
-      {isLoggedIn() && <Link to="/reserve" style={{ color: 'white', marginRight: '1rem' }}>Reserve</Link>}
-      {isAdmin() && <Link to="/admin/dashboard" style={{ color: 'white', marginRight: '1rem' }}>Admin</Link>}
-
-      <div style={{ float: 'right' }}>
-        {!isLoggedIn() ? (
-          <Link to="/login" style={{ color: 'white' }}>Login</Link>
-        ) : (
-          <button onClick={handleLogout} style={{ background: 'white', color: '#303f9f', border: 'none', padding: '5px 10px' }}>
-            Logout
-          </button>
-        )}
+    <header className="navbar-header">
+      <h1>Conference Room Reservations Portal</h1>
+      <p>Plan smart. Reserve easy.</p>
+      <div className="nav-buttons">
+        <button onClick={() => navigate('/mybookings')} className="btn-yellow">My Bookings</button>
+        <button onClick={() => navigate('/rooms')} className="btn-green">View Currently Available Rooms</button>
+        <button onClick={handleLogout} className="btn-pink">Logout</button>
       </div>
-    </nav>
+    </header>
   );
 }
 

@@ -3,13 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Styles.css';
+
 import Home from './components/Home';
-
-
-import RoomList from './components/RoomList'
-
+import RoomList from './components/RoomList';
 import Navbar from './components/Navbar';
-
 import ReservationForm from './components/ReservationForm';
 import AdminDashboard from './components/AdminDashboard';
 import Login from './components/Login';
@@ -25,8 +22,7 @@ import AdminAllReservations from './components/AdminAllReservations';
 import ConfirmBooking from './components/ConfirmBooking';
 import CancelReservation from './components/CancelReservation';
 import DeleteRoom from './components/DeleteRoom';
-import './components/AdminUserList'
-
+import AdminUserList from './components/AdminUserList'; // ✅ fixed this line
 
 function ProtectedRoute({ children }) {
   const isLoggedIn = localStorage.getItem('token') !== null;
@@ -45,16 +41,14 @@ function App() {
       <Navbar />
       <Routes>
         {/* Public Routes */}
-     <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-          <Route path="/rooms" element={
-  <ProtectedRoute>
-    <RoomList />
-  </ProtectedRoute>
-} />
-
-
+        <Route path="/rooms" element={
+          <ProtectedRoute>
+            <RoomList />
+          </ProtectedRoute>
+        } />
 
         {/* Protected Routes */}
         <Route path="/reserve" element={
@@ -92,6 +86,11 @@ function App() {
         <Route path="/admin/users" element={
           <AdminRoute>
             <ManageUsers />
+          </AdminRoute>
+        } />
+        <Route path="/admin/user-list" element={
+          <AdminRoute>
+            <AdminUserList />
           </AdminRoute>
         } />
         <Route path="/admin/add-room" element={
