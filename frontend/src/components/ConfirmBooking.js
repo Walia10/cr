@@ -62,7 +62,10 @@ function ConfirmBooking() {
       </form>
 
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <a className="btn btn-yellow" href="/">Back to Available Rooms</a>
+       <button className="btn-yellow" onClick={() => navigate('/rooms')}>
+         Back to Available Rooms
+       </button>
+
       </div>
     </>
   );

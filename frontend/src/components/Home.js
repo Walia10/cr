@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isLoggedIn, isAdmin } from '../utils/auth';
 import '../Styles.css';
+import '../Navbar.css';
 
 function Home() {
   const navigate = useNavigate();

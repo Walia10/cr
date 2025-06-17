@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import API from '../api';
 import '../Styles.css';
 
 function RoomList() {
   const [rooms, setRooms] = useState([]);
-
-  console.log("RoomList component is rendering.");
+  const navigate = useNavigate();
 
   useEffect(() => {
     API.get('rooms/')
       .then(res => {
-        console.log('ROOMS:', res.data);
         setRooms(res.data);
       })
       .catch(err => {
@@ -20,15 +19,19 @@ function RoomList() {
 
   return (
     <div className="room-card-container">
-      {rooms === null ? (
-        <p>Loading rooms...</p>
-      ) : rooms.length === 0 ? (
+      {rooms.length === 0 ? (
         <p>No rooms available.</p>
       ) : (
         rooms.map(room => (
           <div className="room-card" key={room.id}>
             <h3>{room.name}</h3>
             <p>Capacity: {room.capacity}</p>
+            <button
+              className="btn-green"
+              onClick={() => navigate(`/confirm/${room.id}`)}
+            >
+              Reserve
+            </button>
           </div>
         ))
       )}

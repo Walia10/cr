@@ -65,7 +65,8 @@ function App() {
           <ProtectedRoute>
             <MyBookings />
           </ProtectedRoute>
-        } />
+        }/>
+
         <Route path="/cancel-reservation/:id" element={
           <ProtectedRoute>
             <CancelReservation />

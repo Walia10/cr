@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import API from '../api';
 import '../Styles.css';
 
-
 function MyBookings() {
   const [reservations, setReservations] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     API.get('my-reservations/')
@@ -33,7 +34,9 @@ function MyBookings() {
                 <p><strong>Time:</strong> {res.start_time} - {res.end_time}</p>
               </div>
               <div style={{ marginTop: '10px' }}>
-                <a href={`/edit-reservation/${res.id}`} className="btn btn-pink">Edit</a>
+                <button onClick={() => navigate(`/edit-reservation/${res.id}`)} className="btn btn-pink">
+                  Edit
+                </button>
               </div>
             </div>
           ))
@@ -41,7 +44,9 @@ function MyBookings() {
       </div>
 
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <a className="btn btn-green" href="/reserve">Book a New Room</a>
+        <button className="btn-green" onClick={() => navigate('/rooms')}>
+          Book a New Room
+        </button>
       </div>
     </>
   );
