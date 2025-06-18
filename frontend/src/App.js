@@ -53,7 +53,8 @@ function App() {
   const location = useLocation();
 
   // List of paths where Navbar should be hidden
-  const hideNavbarOn = ['/login', '/register'];
+const hideNavbarOn = ['/', '/login', '/register'];
+
   const isAdminRoute = location.pathname.startsWith('/admin');
 
   return (
