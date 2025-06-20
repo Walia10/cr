@@ -42,7 +42,11 @@ MIDDLEWARE = [
 ]
 
 
-CORS_ALLOWED_ORIGINS = ['https://cr-u5pa.vercel.app']
+CORS_ALLOWED_ORIGINS = ['https://cr-u5pa.vercel.app',
+                        'https://cr-u5pa.onrender.com',
+                        'http://localhost:3000',
+                        'http://localhost:8000',
+                        'http://localhost:5173',]
 
 
 CORS_ALLOW_CREDENTIALS = True
