@@ -8,7 +8,6 @@ function Home() {
 
   return (
     <main style={{ marginTop: '60px', textAlign: 'center' }}>
-      <h2>Welcome! Book your room easily.</h2>
       {!isLoggedIn ? (
         <button className="btn btn-pink" onClick={() => navigate('/login')}>
           Login / Register
