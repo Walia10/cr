@@ -14,7 +14,7 @@ function EditRoom() {
   });
 
   useEffect(() => {
-    API.get(`rooms/${roomId}/`)
+    API.get(`api/rooms/${roomId}/`)
       .then(res => setFormData(res.data))
       .catch(err => console.error("Failed to fetch room data", err));
   }, [roomId]);

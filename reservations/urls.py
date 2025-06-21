@@ -7,9 +7,13 @@ from . import views
 from .views import ReservationViewSet
 
 router = DefaultRouter()
-router.register(r'reservations', ReservationViewSet)
+router.register(r'reservations', ReservationViewSet, basename='reservation')
+
+
 
 urlpatterns = [
+    path('', include(router.urls)),
+
     path('', views.home, name='home'),
     path('available_rooms/', views.available_rooms, name='available_rooms'),
     path('confirm_booking/<int:room_id>/', views.confirm_booking, name='confirm_booking'),

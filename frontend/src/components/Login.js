@@ -9,17 +9,26 @@ function Login() {
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await API.post('login/', { username, password });
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('role', response.data.role);
-      navigate('/');
-    } catch (error) {
-      alert("Login failed");
-      console.error(error);
+  e.preventDefault();
+  try {
+    const response = await API.post('api/login/', { username, password });
+
+    // Store token and role
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('role', response.data.role);
+
+    // Store user_id if your backend supports it (you’ll also need to return it!)
+    if (response.data.user_id) {
+      localStorage.setItem('user_id', response.data.user_id);
     }
-  };
+
+    navigate('/rooms');
+  } catch (error) {
+    alert("Login failed");
+    console.error("Login error:", error.response?.data || error.message);
+  }
+};
+
 
   return (
     <>

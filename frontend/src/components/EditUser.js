@@ -10,7 +10,7 @@ function EditUser() {
   const [username, setUsername] = useState('');
 
   useEffect(() => {
-    API.get(`users/${userId}/`)
+    API.get(`api/users/${userId}/`)
       .then(res => setUsername(res.data.username))
       .catch(err => console.error("Failed to fetch user data", err));
   }, [userId]);

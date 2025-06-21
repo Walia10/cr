@@ -18,7 +18,7 @@ function ReservationForm({ roomId }) {
     }
 
     try {
-      await API.post(`reservations/`, {
+      await API.post(`api/eservations/`, {
         room: roomId,
         date,
         start_time: startTime,

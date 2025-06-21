@@ -8,7 +8,7 @@ function MyBookings() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    API.get('my-reservations/')
+    API.get('api/my-reservations/')
       .then(res => setReservations(res.data))
       .catch(err => {
         console.error("Failed to fetch reservations", err);

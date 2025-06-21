@@ -8,7 +8,7 @@ function RoomList() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    API.get('rooms/')
+    API.get('api/rooms/')
       .then(res => {
         setRooms(res.data);
       })

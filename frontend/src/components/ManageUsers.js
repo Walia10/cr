@@ -6,7 +6,7 @@ function ManageUsers() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    API.get('users/')
+    API.get('api/users/')
       .then(res => setUsers(res.data))
       .catch(err => console.error("Failed to fetch users", err));
   }, []);

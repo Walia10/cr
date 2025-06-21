@@ -10,7 +10,7 @@ function DeleteRoom() {
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      await API.delete(`rooms/${roomId}/`);
+      await API.delete(`api/rooms/${roomId}/`);
       alert("Room deleted successfully.");
       navigate('/admin/rooms');
     } catch (err) {

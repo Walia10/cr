@@ -10,7 +10,7 @@ function DeleteUser() {
   const handleDelete = async (e) => {
     e.preventDefault();
     try {
-      await API.delete(`users/${userId}/`);
+      await API.delete(`api/users/${userId}/`);
       alert("User deleted successfully!");
       navigate('/admin/users');
     } catch (error) {

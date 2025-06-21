@@ -22,17 +22,27 @@ function ConfirmBooking() {
     }
 
     try {
-      await API.post('reservations/', {
+      const token = localStorage.getItem('token');
+      const formattedDate = new Date(date).toISOString().split('T')[0];
+
+      const reservationData = {
         room: parseInt(roomId),
-        date,
+        date: formattedDate,
         start_time: startTime,
         end_time: endTime,
+      };
+
+      await API.post('/api/reservations/', reservationData, {
+        headers: {
+          Authorization: `Token ${token}`,
+        },
       });
 
       setMessage("Reservation confirmed!");
+      setTimeout(() => navigate('/mybookings'), 1500);
     } catch (err) {
+      console.error("Error details:", err.response?.data || err.message);
       setMessage("Reservation failed.");
-      console.error("Error details:", err.response?.data || err.message); // ✅ show backend error
     }
   };
 
@@ -44,20 +54,27 @@ function ConfirmBooking() {
       </header>
 
       {message && (
-        <div style={{ textAlign: 'center', fontWeight: 'bold', color: message.includes("failed") ? "red" : "green" }}>
+        <div
+          style={{
+            textAlign: 'center',
+            fontWeight: 'bold',
+            color: message.includes("failed") ? "red" : "green",
+            marginTop: '10px',
+          }}
+        >
           {message}
         </div>
       )}
 
       <form onSubmit={handleSubmit}>
         <label>Date:
-          <input type="date" min={today} value={date} onChange={e => setDate(e.target.value)} required />
+          <input type="date" min={today} value={date} onChange={(e) => setDate(e.target.value)} required />
         </label>
         <label>Start Time:
-          <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} required />
+          <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
         </label>
         <label>End Time:
-          <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} required />
+          <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
         </label>
         <button type="submit" className="btn btn-green">Confirm Reservation</button>
       </form>

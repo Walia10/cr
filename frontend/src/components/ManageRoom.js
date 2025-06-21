@@ -6,7 +6,7 @@ function ManageRooms() {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    API.get('rooms/')
+    API.get('api/rooms/')
       .then(res => setRooms(res.data))
       .catch(err => {
         console.error("Failed to fetch rooms", err);

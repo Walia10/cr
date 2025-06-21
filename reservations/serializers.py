@@ -12,3 +12,6 @@ class ReservationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Reservation
         fields = '__all__'
+        read_only_fields = ['user']
+def perform_create(self, serializer):
+    serializer.save(user=self.request.user)  # ✅ this is perfect

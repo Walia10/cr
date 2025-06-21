@@ -1,54 +1,26 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
-from .models import Room, Reservation
-from .forms import ReservationForm
-from django.contrib.auth import login
-from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
-from .forms import RoomForm
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect
-from .forms import EditReservationForm
 from datetime import datetime, timedelta
-from django.core.mail import send_mail
 from django.conf import settings
-from django.contrib.auth import logout
-from rest_framework.decorators import action
-from rest_framework.response import Response
-
-from rest_framework.decorators import api_view, permission_classes
+from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.http import JsonResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from rest_framework import status, viewsets
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from .serializers import RoomSerializer  # Make sure you have this
-from .models import Room
-from django.http import JsonResponse
-from .models import Room
-from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 
-from rest_framework import status, viewsets
-from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from django.contrib.auth.models import User
+from .forms import ReservationForm, RoomForm, EditReservationForm
+from .models import Room, Reservation
+from .serializers import RoomSerializer, ReservationSerializer
 
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from .models import Reservation
-from .serializers import RoomSerializer
 
 @login_required
 def home_redirect_view(request):
-    if request.user.is_authenticated:
-        if request.user.is_superuser:
-            return redirect('admin_dashboard')
-        else:
-            return redirect('home')
-    return redirect('login')
+    return redirect('admin_dashboard' if request.user.is_superuser else 'home')
 
 def home(request):
     rooms = Room.objects.all()
@@ -58,8 +30,6 @@ def home(request):
 def available_rooms(request):
     rooms = Room.objects.all()
     return render(request, 'reservations/available_rooms.html', {'rooms': rooms})
-
-
 
 @login_required
 def confirm_booking(request, room_id):
@@ -91,24 +61,19 @@ def confirm_booking(request, room_id):
                     start_time=start,
                     end_time=end
                 )
-
                 send_mail(
                     subject='Booking Confirmation',
-                    message=f'Hi {request.user.first_name or request.user.username},\n\n'
-                            f'Your reservation for room "{room.name}" on {date} from {start} to {end} has been confirmed.',
+                    message=f'Hi {request.user.username},\n\nYour reservation for room "{room.name}" on {date} from {start} to {end} has been confirmed.',
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[request.user.email],
                     fail_silently=True
                 )
-
                 success_message = "Booking confirmed! A confirmation email has been sent."
-
     else:
         form = ReservationForm()
 
     return render(request, 'reservations/confirm_booking.html', {
-        'form': form,
-        'room': room,
+        'form': form, 'room': room,
         'success_message': success_message,
         'error_message': error_message
     })
@@ -126,18 +91,16 @@ def edit_reservation(request, reservation_id):
         if form.is_valid():
             new_date = form.cleaned_data['date']
             new_time = form.cleaned_data['time']
-
-            # Update start and end time based on new_time
             reservation.date = new_date
             reservation.start_time = new_time
             reservation.end_time = (datetime.combine(new_date, new_time) + timedelta(hours=1)).time()
-
             reservation.save()
             return redirect('my_reservations')
     else:
         form = EditReservationForm(instance=reservation)
 
     return render(request, 'reservations/edit_reservation.html', {'form': form, 'reservation': reservation})
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
@@ -153,16 +116,13 @@ def register(request):
         return Response({'error': 'Username already exists.'}, status=400)
 
     user = User.objects.create_user(username=username, password=password1)
-    token, _ = Token.objects.get_or_create(user=user)  # generate auth token
+    token, _ = Token.objects.get_or_create(user=user)
 
     return Response({
         'message': 'User created successfully.',
         'token': token.key,
         'username': user.username
     }, status=201)
-
-
-
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -186,6 +146,12 @@ def login_view(request):
         'role': 'admin' if user.is_superuser else 'user'
     }, status=200)
 
+@api_view(['GET'])
+@permission_classes([AllowAny])
+def api_room_list(request):
+    rooms = Room.objects.all()
+    serializer = RoomSerializer(rooms, many=True)
+    return Response(serializer.data)
 
 
 def admin_required(view_func):
@@ -195,15 +161,12 @@ def admin_required(view_func):
 def admin_dashboard(request):
     return render(request, 'reservations/dashboard.html')
 
-
-
 def admin_logout(request):
     logout(request)
     return redirect('login')
 
 @admin_required
 def manage_rooms(request):
-
     rooms = Room.objects.all()
     return render(request, 'reservations/rooms.html', {'rooms': rooms})
 
@@ -237,77 +200,42 @@ def delete_room(request, room_id):
     return redirect('manage_rooms')
 
 @admin_required
-def manage_reservations(request):
-    reservations = Reservation.objects.all()
-    return render(request, 'reservations/reservations.html', {'reservations': reservations})
-
-@admin_required
 def manage_users(request):
     users = User.objects.all()
     return render(request, 'reservations/users.html', {'users': users})
 
 @admin_required
-def make_reservation(request, room_id):
-    room = get_object_or_404(Room, id=room_id)
-    if request.method == 'POST':
-        form = ReservationForm(request.POST)
-        if form.is_valid():
-            reservation = form.save(commit=False)
-            reservation.user = request.user
-            reservation.room = room
-            reservation.save()
-            return redirect('my_reservations')
-    else:
-        form = ReservationForm()
-    return render(request, 'make_reservation.html', {'form': form, 'room': room})
-
-
-@admin_required
-def delete_reservation_admin(request, reservation_id):
-    reservation = get_object_or_404(Reservation, id=reservation_id)
-    reservation.delete()
-    return redirect('manage_reservations')
-
-@admin_required
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
-
     if request.method == 'POST':
         new_username = request.POST['username']
-
-        # Optional: prevent admin from renaming themselves to an empty string
         if user == request.user and new_username.strip() == "":
             messages.error(request, "You cannot blank your own username.")
             return redirect('manage_users')
-
         user.username = new_username
         user.save()
         messages.success(request, f"Username updated to '{new_username}'.")
         return redirect('manage_users')
-
     return render(request, 'reservations/edit_user.html', {'user': user})
 
 @admin_required
 def delete_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
-
     if user == request.user:
         messages.error(request, "You cannot delete your own account while logged in.")
         return redirect('manage_users')
-
     if request.method == 'POST':
         user.delete()
         messages.success(request, f"User '{user.username}' was deleted.")
         return redirect('manage_users')
-
     return render(request, 'reservations/confirm_delete_user.html', {'user': user})
 
+@admin_required
 def admin_manage_reservations(request):
-    reservations = Reservation.objects.all().order_by('-date', '-start_time')
+    reservations = Reservation.objects.select_related('room', 'user').order_by('-date', '-start_time')
     return render(request, 'reservations/admin_manage_reservations.html', {'reservations': reservations})
 
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
+@admin_required
 def edit_reservation_admin(request, reservation_id):
     reservation = get_object_or_404(Reservation, id=reservation_id)
     if request.method == 'POST':
@@ -320,8 +248,7 @@ def edit_reservation_admin(request, reservation_id):
         form = EditReservationForm(instance=reservation)
     return render(request, 'reservations/edit_reservations_admin.html', {'form': form})
 
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
+@admin_required
 def delete_reservation_admin(request, reservation_id):
     reservation = get_object_or_404(Reservation, id=reservation_id)
     if request.method == 'POST':
@@ -330,30 +257,7 @@ def delete_reservation_admin(request, reservation_id):
         return redirect('admin_manage_reservations')
     return render(request, 'reservations/confirm_delete_user.html', {'object': reservation, 'type': 'reservation'})
 
-@login_required
-@user_passes_test(lambda u: u.is_superuser)
-def admin_manage_reservations(request):
-    reservations = Reservation.objects.select_related('room', 'user').all().order_by('-date', '-start_time')
-    return render(request, 'reservations/admin_manage_reservations.html', {
-        'reservations': reservations
-    })
-
-
-
-
-@api_view(['GET'])
-@permission_classes([AllowAny])
-def api_room_list(request):
-    rooms = Room.objects.all()
-    serializer = RoomSerializer(rooms, many=True)
-    return Response(serializer.data)
-
-from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from .models import Room, Reservation
-from .serializers import RoomSerializer, ReservationSerializer
+# ----------------- API: Reservation ViewSet -----------------
 
 class ReservationViewSet(viewsets.ModelViewSet):
     queryset = Reservation.objects.all()
@@ -366,3 +270,6 @@ class ReservationViewSet(viewsets.ModelViewSet):
         reservations = Reservation.objects.filter(user=user)
         serializer = self.get_serializer(reservations, many=True)
         return Response(serializer.data)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
