@@ -8,12 +8,18 @@ function MyBookings() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    API.get('api/my-reservations/')
-      .then(res => setReservations(res.data))
-      .catch(err => {
-        console.error("Failed to fetch reservations", err);
-      });
-  }, []);
+  const token = localStorage.getItem('token');
+  API.get('api/reservations/my-reservations/', {
+    headers: {
+      Authorization: `Token ${token}`,
+    },
+  })
+    .then(res => setReservations(res.data))
+    .catch(err => {
+      console.error("Failed to fetch reservations", err);
+    });
+}, []);
+
 
   return (
     <>

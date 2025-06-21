@@ -7,11 +7,14 @@ class RoomSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ReservationSerializer(serializers.ModelSerializer):
-    room = serializers.PrimaryKeyRelatedField(queryset=Room.objects.all())  # allow ID input
+    room = RoomSerializer(read_only=True)
+    room_id = serializers.PrimaryKeyRelatedField(
+        queryset=Room.objects.all(),
+        source='room',
+        write_only=True
+    )
 
     class Meta:
         model = Reservation
-        fields = '__all__'
+        fields = ['id', 'room', 'room_id', 'date', 'start_time', 'end_time', 'user']
         read_only_fields = ['user']
-def perform_create(self, serializer):
-    serializer.save(user=self.request.user)  # ✅ this is perfect

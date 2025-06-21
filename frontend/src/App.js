@@ -10,6 +10,8 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Styles.css';
 
+import EditReservation from './components/EditReservation';
+
 import Home from './components/Home';
 import RoomList from './components/RoomList';
 import Navbar from './components/Navbar';
@@ -82,6 +84,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+          -<Route path="/edit-reservation/:reservationId" element={<EditReservation />} />
+-
         <Route
           path="/confirm/:roomId"
           element={
@@ -90,6 +94,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+          <Route path="/edit-reservation/:reservationId" element={<EditReservation />} />
+
         <Route
           path="/mybookings"
           element={
