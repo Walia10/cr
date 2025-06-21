@@ -45,7 +45,6 @@ def confirm_booking(request, room_id):
             end = form.cleaned_data['end_time']
 
             conflict = Reservation.objects.filter(
-                room=room,
                 date=date,
                 start_time__lt=end,
                 end_time__gt=start

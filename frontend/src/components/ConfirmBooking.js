@@ -17,7 +17,7 @@ function ConfirmBooking() {
     e.preventDefault();
 
     if (endTime <= startTime) {
-      setMessage("End time must be after start time.");
+      setMessage("⚠️ End time must be after start time.");
       return;
     }
 
@@ -25,12 +25,13 @@ function ConfirmBooking() {
       const token = localStorage.getItem('token');
       const formattedDate = new Date(date).toISOString().split('T')[0];
 
-      const reservationData = {
-        room: parseInt(roomId),
-        date: formattedDate,
-        start_time: startTime,
-        end_time: endTime,
-      };
+     const reservationData = {
+       room_id: parseInt(roomId),
+       date: formattedDate,
+       start_time: startTime,
+       end_time: endTime,
+};
+
 
       await API.post('/api/reservations/', reservationData, {
         headers: {
@@ -38,11 +39,11 @@ function ConfirmBooking() {
         },
       });
 
-      setMessage("Reservation confirmed!");
+      setMessage("✅ Reservation confirmed!");
       setTimeout(() => navigate('/mybookings'), 1500);
     } catch (err) {
-      console.error("Error details:", err.response?.data || err.message);
-      setMessage("Reservation failed.");
+      console.error("Reservation error:", err.response?.data || err.message);
+      setMessage("❌ Reservation failed. Please try again.");
     }
   };
 
@@ -50,7 +51,7 @@ function ConfirmBooking() {
     <>
       <header>
         <h1>Confirm Your Reservation</h1>
-        <p>You're booking room ID: {roomId}</p>
+        <p>Please select a date and time for your booking.</p>
       </header>
 
       {message && (
@@ -67,16 +68,37 @@ function ConfirmBooking() {
       )}
 
       <form onSubmit={handleSubmit}>
-        <label>Date:
-          <input type="date" min={today} value={date} onChange={(e) => setDate(e.target.value)} required />
+        <label>
+          Date:
+          <input
+            type="date"
+            min={today}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
         </label>
-        <label>Start Time:
-          <input type="time" value={startTime} onChange={(e) => setStartTime(e.target.value)} required />
+        <label>
+          Start Time:
+          <input
+            type="time"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            required
+          />
         </label>
-        <label>End Time:
-          <input type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} required />
+        <label>
+          End Time:
+          <input
+            type="time"
+            value={endTime}
+            onChange={(e) => setEndTime(e.target.value)}
+            required
+          />
         </label>
-        <button type="submit" className="btn btn-green">Confirm Reservation</button>
+        <button type="submit" className="btn btn-green">
+          Confirm Reservation
+        </button>
       </form>
 
       <div style={{ textAlign: 'center', marginTop: '20px' }}>

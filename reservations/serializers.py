@@ -7,12 +7,11 @@ class RoomSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ReservationSerializer(serializers.ModelSerializer):
-    room = RoomSerializer(read_only=True)
     room_id = serializers.PrimaryKeyRelatedField(
         queryset=Room.objects.all(),
-        source='room',
-        write_only=True
+        source='room'
     )
+    room = RoomSerializer(read_only=True)
 
     class Meta:
         model = Reservation

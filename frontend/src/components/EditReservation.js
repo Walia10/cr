@@ -10,6 +10,7 @@ function EditReservation() {
     date: '',
     start_time: '',
     end_time: '',
+    room_id: null, // ✅ required for update
   });
   const [roomName, setRoomName] = useState('');
 
@@ -27,6 +28,7 @@ function EditReservation() {
           date: data.date,
           start_time: data.start_time,
           end_time: data.end_time,
+          room_id: data.room.id, // ✅ grab room ID from nested room
         });
         setRoomName(data.room.name);
       })
@@ -58,7 +60,7 @@ function EditReservation() {
       })
       .catch(err => {
         alert("Update failed.");
-        console.error(err);
+        console.error(err.response?.data || err.message);
       });
   };
 
