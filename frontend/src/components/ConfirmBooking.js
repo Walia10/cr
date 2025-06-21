@@ -23,7 +23,7 @@ function ConfirmBooking() {
 
     try {
       await API.post('reservations/', {
-        room: parseInt(roomId),       // ✅ ensure correct data type
+        room: parseInt(roomId),
         date,
         start_time: startTime,
         end_time: endTime,
