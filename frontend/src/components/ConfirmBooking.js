@@ -23,15 +23,16 @@ function ConfirmBooking() {
 
     try {
       await API.post('reservations/', {
-        room: roomId,
+        room: parseInt(roomId),       // ✅ ensure correct data type
         date,
         start_time: startTime,
         end_time: endTime,
       });
+
       setMessage("Reservation confirmed!");
     } catch (err) {
       setMessage("Reservation failed.");
-      console.error(err);
+      console.error("Error details:", err.response?.data || err.message); // ✅ show backend error
     }
   };
 
@@ -62,10 +63,9 @@ function ConfirmBooking() {
       </form>
 
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
-       <button className="btn-yellow" onClick={() => navigate('/rooms')}>
-         Back to Available Rooms
-       </button>
-
+        <button className="btn-yellow" onClick={() => navigate('/rooms')}>
+          Back to Available Rooms
+        </button>
       </div>
     </>
   );

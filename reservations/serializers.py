@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Room, Reservation  # Make sure Reservation is imported
+from .models import Room, Reservation
 
 class RoomSerializer(serializers.ModelSerializer):
     class Meta:
@@ -7,7 +7,7 @@ class RoomSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ReservationSerializer(serializers.ModelSerializer):
-    room = RoomSerializer(read_only=True)  # optional: to show room details
+    room = serializers.PrimaryKeyRelatedField(queryset=Room.objects.all())  # allow ID input
 
     class Meta:
         model = Reservation
