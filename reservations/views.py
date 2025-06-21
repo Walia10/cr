@@ -16,9 +16,11 @@ from datetime import datetime, timedelta
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import logout
+from rest_framework.decorators import action
+from rest_framework.response import Response
 
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from .serializers import RoomSerializer  # Make sure you have this
 from .models import Room
@@ -27,10 +29,17 @@ from .models import Room
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
+
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .models import Reservation
+from .serializers import RoomSerializer
 
 @login_required
 def home_redirect_view(request):
@@ -338,3 +347,22 @@ def api_room_list(request):
     rooms = Room.objects.all()
     serializer = RoomSerializer(rooms, many=True)
     return Response(serializer.data)
+
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .models import Room, Reservation
+from .serializers import RoomSerializer, ReservationSerializer
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['get'], url_path='my-reservations')
+    def my_reservations(self, request):
+        user = request.user
+        reservations = Reservation.objects.filter(user=user)
+        serializer = self.get_serializer(reservations, many=True)
+        return Response(serializer.data)

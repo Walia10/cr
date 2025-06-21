@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.contrib.auth import views as auth_views
 from django.contrib import admin
@@ -7,7 +7,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView
 from .views import home_redirect_view, register, login_view
 from .views import api_room_list
+from rest_framework.routers import DefaultRouter
+from reservations.views import ReservationViewSet
 
+router = DefaultRouter()
+router.register(r'reservations', ReservationViewSet)
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -44,7 +48,8 @@ urlpatterns = [
     path('api/rooms/', views.api_room_list, name='api_room_list'),
     path('register/', register, name='register'),
     path('api/login/', views.login_view, name='api_login'),
-    path('api/rooms/', api_room_list, name='api_room_list')
+    path('api/rooms/', api_room_list, name='api_room_list'),
+    path('api/', include(router.urls)),
 
 
 
